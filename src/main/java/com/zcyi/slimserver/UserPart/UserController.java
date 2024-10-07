@@ -188,23 +188,28 @@ public class UserController {
         String path = Constant.USER_AVATAR_URL + imgUrl;
         File avatarFile = new File(path);
         if (!avatarFile.exists()) {
-            avatarFile.getParentFile().mkdir();
-            try {
-                //创建文件
-                avatarFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ApiResult.failed("上传失败");
+            boolean mkdir = avatarFile.getParentFile().mkdir();
+            if (mkdir){
+                try {
+                    //创建文件
+                    boolean newFile = avatarFile.createNewFile();
+                    if (newFile){
+                        try {
+                            avatar.transferTo(avatarFile);
+                            userService.updateAvatar(fileName, Integer.parseInt(userId));
+                            return ApiResult.success("上传成功", fileName);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return ApiResult.failed("上传失败");
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ApiResult.failed("上传失败");
+                }
             }
         }
-        try {
-            avatar.transferTo(avatarFile);
-            userService.updateAvatar(fileName, Integer.parseInt(userId));
-            return ApiResult.success("上传成功", fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ApiResult.failed("上传失败");
-        }
+        return ApiResult.failed("上传失败");
     }
 
     @PostMapping("/updateWeight")
