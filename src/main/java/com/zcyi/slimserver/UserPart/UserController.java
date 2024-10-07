@@ -177,6 +177,7 @@ public class UserController {
             return ApiResult.failed("参数有误");
         }
         String extension;
+        assert avatar != null;
         int lastDotIndex = Objects.requireNonNull(avatar.getOriginalFilename()).lastIndexOf(".");
         if (lastDotIndex != -1) {
             extension = avatar.getOriginalFilename().substring(lastDotIndex).toLowerCase();
