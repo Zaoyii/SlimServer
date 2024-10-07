@@ -80,14 +80,18 @@ public class UserController {
     @PostMapping("/initUserData")
     @ResponseBody
     public ApiResult<String> initUserData(@RequestHeader("Authorization") String authorization, String nickname, int gender, int age, int weight, int height, int goal) {
-        System.out.println(height + ":" + weight + ":" + gender + ":" + goal + ":" + age + ":" + nickname + "----=-=-");
         if (nickname == null || gender == -1 || age == -1 || weight == -1 || height == -1 || goal == -1) {
             return ApiResult.failed("参数有误");
         }
         DecodedJWT verify = UtilMethod.verify(authorization);
         String userId = verify.getClaim("userId").asString();
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+        Weight weightOb = new Weight();
+        weightOb.setWeightUserId(Integer.parseInt(userId));
+        weightOb.setWeightData(weight);
+        weightOb.setWeightCreateTime(today);
+        userService.addUserWeightData(weightOb);
         userService.initUserData(nickname, gender, age, weight, height, goal, Integer.parseInt(userId));
-
         return ApiResult.success("初始化用户数据成功");
     }
 
@@ -216,6 +220,7 @@ public class UserController {
             } else {
                 userService.addUserWeightData(weight);
             }
+
             userService.updateUserWeight(weight.getWeightData(), weight.getWeightUserId());
             return ApiResult.success("更新成功");
         } else {
@@ -227,7 +232,7 @@ public class UserController {
     @ResponseBody
     public ApiResult<ArrayList<Weight>> getWeightByUserId(long userId) {
         ArrayList<Weight> weight = userService.selectUserWeightById(userId);
-        System.out.println(weight+"--=-=--=");
+        System.out.println(weight + "--=-=--=");
         Collections.reverse(weight);
         if (weight.size() > 0) {
             return ApiResult.success(weight);
