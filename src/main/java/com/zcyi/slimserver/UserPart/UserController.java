@@ -70,7 +70,7 @@ public class UserController {
         }
         if (!username.isEmpty() && !password.isEmpty() && !code.isEmpty()) {
             String s = UtilMethod.generateSaltPassword(password);
-            userService.addUser(new User(username, s, email));
+            userService.addUser(new User(username, s, email, username));
             return ApiResult.success("注册成功");
         } else {
             return ApiResult.failed("用户名或密码为空");
