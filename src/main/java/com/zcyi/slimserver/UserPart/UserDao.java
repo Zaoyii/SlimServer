@@ -44,8 +44,8 @@ public interface UserDao {
      * @param user 参数
      * @return 1成功 0失败
      */
-    @Insert("insert into t_user (user_name,user_password,user_email) " +
-            "value (#{userName},#{userPassword},#{userEmail}) ")
+    @Insert("insert into t_user (user_name,user_password,user_email,user_nickname) " +
+            "value (#{userName},#{userPassword},#{userEmail},#{userNickName}) ")
     int addUser(User user);
 
     /**
