@@ -30,9 +30,10 @@ public class User {
     private String userUpdateTime;
     private String userToken;
 
-    public User(String userName, String userPassword, String userEmail) {
+ public User(String userName, String userPassword, String userEmail, String userNickName) {
         this.userName = userName;
         this.userPassword = userPassword;
         this.userEmail = userEmail;
+        this.userNickName = userNickName;
     }
 }
